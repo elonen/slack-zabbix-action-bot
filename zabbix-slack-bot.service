@@ -1,0 +1,18 @@
+[Unit]
+Description=Slack Zabbix Bot
+After=network.target
+
+[Service]
+ExecStart=%INSTALLDIR%/_venv/bin/python %INSTALLDIR%/main.py --config %INSTALLDIR%/config.ini
+WorkingDirectory=%INSTALLDIR%
+User=zabbix
+Group=zabbix
+Restart=on-failure
+RestartSec=5s
+StartLimitInterval=60s
+StartLimitBurst=3
+StandardOutput=append:/var/log/zabbix-slack-bot.log
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target
