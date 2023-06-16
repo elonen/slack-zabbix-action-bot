@@ -1,5 +1,5 @@
 [Unit]
-Description=Slack Zabbix Bot
+Description=Slack Zabbix Action Bot
 After=network.target
 
 [Service]
@@ -11,7 +11,7 @@ Restart=on-failure
 RestartSec=5s
 StartLimitInterval=60s
 StartLimitBurst=3
-StandardOutput=append:/var/log/zabbix-slack-bot.log
+StandardOutput=append:/var/log/slack-zabbix-action-bot.log
 StandardError=inherit
 
 [Install]
