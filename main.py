@@ -47,13 +47,23 @@ def send_maintenance_form(zapi_token, zapi_url, say, thread_ts=None):
                     "action_id": "duration_select"
                 }
             },
+            { "type": "divider" },
             {
                 "type": "section",
                 "text": {"type": "mrkdwn", "text": " "},
                 "accessory": {
                     "type": "button",
-                    "text": {"type": "plain_text", "text": "Activate maintenance"},
+                    "text": {"type": "plain_text", "text": "Start maintenance"},
                     "action_id": "activate_clicked"
+                }
+            },
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": " "},
+                "accessory": {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Cancel"},
+                    "action_id": "cancel_clicked"
                 }
             }
         ]
@@ -241,6 +251,25 @@ class ZabbixSlackBot:
             say(text=f"User *{user}* activated maintenance period `{selected_maint['text']}` for {selected_duration['text']}")
 
             # Delete the form message now that we're done with it
+            channel_id = body['channel']['id']
+            message_ts = body['message']['ts']
+            client.chat_delete(
+                channel=channel_id,
+                ts=message_ts
+            )
+
+
+        @app.action("cancel_clicked")
+        def action_cancel_clicked(ack, body, say, client):
+            """
+            Perform action when the "cancel_clicked" button is clicked in the message.
+            Delete the form message.
+            """
+            logging.info("cancel_clicked - action")
+            ack()
+            if not self.check_allowed_channels(body, say):
+                return
+
             channel_id = body['channel']['id']
             message_ts = body['message']['ts']
             client.chat_delete(
