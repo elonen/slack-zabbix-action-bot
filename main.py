@@ -114,7 +114,7 @@ class ZabbixSlackBot:
 
 
         @app.event("app_mention")
-        def handle_app_mentions(body, say, client):
+        def handle_app_mentions(ack, body, say, client):
             """
             Handle mentions of the app in the Slack channel
             and respond with different keywords.
@@ -127,6 +127,8 @@ class ZabbixSlackBot:
                 client (slack_sdk.WebClient): A Slack client instance.
             """
             logging.info("app_mention - event")
+            ack()
+
             event = body["event"]
             channel_id = event["channel"]
             show_usage = True
@@ -237,13 +239,14 @@ def main():
     # Read config file
     config = configparser.ConfigParser()
     config.read(args.config_file)
-    slack_token = config['SLACK']['APP_TOKEN']
-    if 'XXXXXX' in slack_token:
-        logging.error("Please set proper APP_TOKEN in the config file.")
+    app_token = config['SLACK']['APP_TOKEN']
+    bot_token = config['SLACK']['BOT_TOKEN']
+    if 'XXXXXX' in bot_token or 'XXXXXX' in app_token:
+        logging.error("Please set proper tokens in the config file")
         sys.exit(1)
 
     # Initialize the bot
-    app = App(token=slack_token)
+    app = App(token=bot_token)
     bot = ZabbixSlackBot(app)
     bot.allowed_channels = [id.strip() for id in config['SLACK']['ALLOWED_CHANNELS'].split(',')]
     bot.bot_username = config['SLACK']['BOT_USERNAME']
@@ -259,7 +262,7 @@ def main():
 
     # Run forever
     logging.info("Starting zabbix bot...")
-    SocketModeHandler(app, config['SLACK']['APP_TOKEN']).start()
+    SocketModeHandler(app, app_token).start()
 
 
 if __name__ == "__main__":
