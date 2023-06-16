@@ -96,6 +96,29 @@ class ZabbixSlackBot:
     zabbix_token: str = ""
     zabbix_url: str = ""
 
+
+    def check_allowed_channels(self, body, say):
+        """
+        Check if the bot is allowed to operate on the channel.
+        """
+        channel_id = None
+        thread_ts = None
+        try :
+            channel_id = body["event"]["channel"]
+            thread_ts = body["event"]['thread_ts']
+        except KeyError:
+            try:
+                channel_id = body["container"]["channel_id"]
+                thread_ts = body["container"]['thread_ts']
+            except KeyError:
+                logging.error("No channel_id found in body")
+                return False
+        if channel_id not in self.allowed_channels:
+            say(text="Sorry, bot is not allowed to operate on this channel.", thread_ts=thread_ts)
+            return False
+        return True
+
+
     def __init__(self, app):
         self.app = app
 
@@ -128,6 +151,8 @@ class ZabbixSlackBot:
             """
             logging.info("app_mention - event")
             ack()
+            if not self.check_allowed_channels(body, say):
+                return
 
             event = body["event"]
             channel_id = event["channel"]
@@ -181,11 +206,7 @@ class ZabbixSlackBot:
             """
             logging.info("activate_clicked - action")
             ack()
-
-            # Check if the channel is allowed
-            channel_id = body["container"]["channel_id"]
-            if channel_id not in self.allowed_channels:
-                say(text="Sorry, bot is not allowed to operate on this channel.", thread_ts=body['container']['thread_ts'])
+            if not self.check_allowed_channels(body, say):
                 return
 
             # Process the form
