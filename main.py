@@ -3,6 +3,7 @@ import signal
 import sys
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+from pprint import pprint
 import configparser
 import os
 import logging
@@ -115,11 +116,13 @@ class ZabbixSlackBot:
         thread_ts = None
         try :
             channel_id = body["event"]["channel"]
-            thread_ts = body["event"]['thread_ts']
+            if "thread_ts" in body["event"]:
+                thread_ts = body["event"]['thread_ts']
         except KeyError:
             try:
                 channel_id = body["container"]["channel_id"]
-                thread_ts = body["container"]['thread_ts']
+                if "thread_ts" in body["container"]:
+                    thread_ts = body["container"]['thread_ts']
             except KeyError:
                 logging.error("No channel_id found in body")
                 return False
