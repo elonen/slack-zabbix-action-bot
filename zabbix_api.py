@@ -30,7 +30,7 @@ def get_maintenance_periods(api_token, api_url):
         "id": 1
     }
     print("Sending request to Zabbix API @ " + api_url)
-    response = requests.post(api_url, headers=headers, json=data)
+    response = requests.post(api_url, headers=headers, json=data, verify=False)
     response.raise_for_status()
     return response.json()['result']
 
@@ -67,7 +67,7 @@ def update_maintenance_period(api_token, api_url, maintenance_id, duration_sec):
         "auth": api_token,
         "id": 1
     }
-    response = requests.post(api_url, headers=headers, json=data)
+    response = requests.post(api_url, headers=headers, json=data, verify=False)
     response.raise_for_status()
 
 
@@ -108,7 +108,7 @@ def list_active_problems(api_token, api_url) -> List[Dict[str, str]]:
         "auth": api_token,
         "id": 1
     }
-    response = requests.post(api_url, headers=headers, json=data)
+    response = requests.post(api_url, headers=headers, json=data, verify=False)
     response.raise_for_status()
 
     severity_mapping = {
