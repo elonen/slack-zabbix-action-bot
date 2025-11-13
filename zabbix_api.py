@@ -19,6 +19,7 @@ def get_maintenance_periods(api_token, api_url):
     """
     headers = {
         'Content-Type': 'application/json',
+        'Authorization': f'Bearer {api_token}',
     }
     data = {
         "jsonrpc": "2.0",
@@ -26,7 +27,6 @@ def get_maintenance_periods(api_token, api_url):
         "params": {
             "output": ["maintenanceid", "name"]
         },
-        "auth": api_token,
         "id": 1
     }
     print("Sending request to Zabbix API @ " + api_url)
@@ -47,6 +47,7 @@ def update_maintenance_period(api_token, api_url, maintenance_id, duration_sec):
     """
     headers = {
         'Content-Type': 'application/json',
+        'Authorization': f'Bearer {api_token}',
     }
     now = int(time.time())
     data = {
@@ -64,7 +65,6 @@ def update_maintenance_period(api_token, api_url, maintenance_id, duration_sec):
                 }
             ]
         },
-        "auth": api_token,
         "id": 1
     }
     response = requests.post(api_url, headers=headers, json=data, verify=False)
@@ -89,6 +89,7 @@ def list_active_problems(api_token, api_url) -> List[Dict[str, str]]:
     """
     headers = {
         'Content-Type': 'application/json',
+        'Authorization': f'Bearer {api_token}',
     }
     data = {
         "jsonrpc": "2.0",
@@ -105,7 +106,6 @@ def list_active_problems(api_token, api_url) -> List[Dict[str, str]]:
             "monitored": "true",
             "skipDependent": "true"
         },
-        "auth": api_token,
         "id": 1
     }
     response = requests.post(api_url, headers=headers, json=data, verify=False)
