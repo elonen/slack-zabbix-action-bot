@@ -6,16 +6,17 @@ Runs as a systemd service.
 ## Usage
 
 1. Create Slack app, install to workspace using the manifest below:
-    ```yaml
-    display_information:
+
+```yaml
+display_information:
     name: Zabbix bot
     description: Sysops Zabbix monitoring bot
     background_color: "#7a1600"
-    features:
+features:
     bot_user:
         display_name: Zabbix
         always_online: false
-    oauth_config:
+oauth_config:
     scopes:
         bot:
         - app_mentions:read
@@ -26,7 +27,7 @@ Runs as a systemd service.
         - incoming-webhook
         - reactions:write
         - reactions:read
-    settings:
+settings:
     event_subscriptions:
         bot_events:
         - app_mention
@@ -35,7 +36,7 @@ Runs as a systemd service.
     org_deploy_enabled: false
     socket_mode_enabled: true
     token_rotation_enabled: false
-    ```
+```
 
 2. Create Zabbix user with API token. Needs permissions to update maintenance periods and list active problems.
 
