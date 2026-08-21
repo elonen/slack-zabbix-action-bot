@@ -38,15 +38,15 @@ settings:
     token_rotation_enabled: false
 ```
 
-2. Create Zabbix user with API token. Needs permissions to update maintenance periods and list active problems.
+3. Configure bot in `config.ini`
+   1. Add "App Level Token" for the Slack app, with scope `connections:write`. Copy the token (`xapp-XXXXX`) to `config.ini`
+   2. In bot's "Features / OAuth & Permissions / OAuth Tokens", click "Install to [org]". Select channel and accept. Copy the token (`xoxb-XXXXX`) to `config.ini`
+   3. From Slack, copy your monitoring channel ID and add it to `ALLOWED_CHANNELS` in `config.ini`
+   4. In Zabbix, add an API token to some user. Needs permissions to update maintenance periods and list active problems.
 
-3. Configure bot in `config.ini` (Slack app token, Zabbix API URL/token, bot mention name and allowed channel IDs).
+4. Install the systemd service with `install.sh`, or manually (read the script).
 
-4. Install with `install.sh` or manually.
-
-5. Test bot with commands (e.g. `@zabbix_bot list`).
-
-The bot can be installed as a systemd service using the `install.sh` script.
+5. Test bot with commands (e.g. `@zabbix_bot list`). If no reply appears, look into `/var/log/slack-zabbix-action-bot.log`
 
 ## Bot Commands
 
@@ -58,6 +58,6 @@ Shows usage if no keyword is given.
 
 ## License
 
-Copyright 2023 by Jarno Elonen.
+Copyright 2023-2026 by Jarno Elonen.
 
 Licensed under the MIT License.
